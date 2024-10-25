@@ -10,7 +10,7 @@ class Player implements Serializable {
   
   private final static long serialVersionUID = -2839624977577268456L;
   private String name;
-  private int topScore;
+  private transient int topScore;
   private long bigScore;
   private final transient long accountId;
   private final static int version = 1;
