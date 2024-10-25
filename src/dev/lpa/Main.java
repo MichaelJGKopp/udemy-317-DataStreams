@@ -41,8 +41,8 @@ class Player implements Serializable {
     
     var serializedVer = stream.readInt();
     collectedWeapons = (List<String>) stream.readObject();
-    name = stream.readUTF();;
-    topScore = stream.readInt();
+    name = stream.readUTF();
+    topScore = (serializedVer == 1) ? stream.readInt() : stream.readLong();
   }
   
   @Serial
@@ -124,7 +124,6 @@ public class Main {
       
       dataStream.writeUTF(myString);
       System.out.println("writeUTF writes " + (dataStream.size() - position));
-      position = dataStream.size();
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
