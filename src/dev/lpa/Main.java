@@ -103,4 +103,13 @@ public class Main {
       throw new RuntimeException(e);
     }
   }
+  
+  private static void writeObject(Path dataFile, Player player) {
+    try (ObjectOutputStream objStream =
+           new ObjectOutputStream(Files.newOutputStream(dataFile))) {
+      objStream.writeObject(player);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
 }
