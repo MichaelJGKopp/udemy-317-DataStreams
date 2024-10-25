@@ -13,12 +13,13 @@ class Player implements Serializable {
   private int topScore;
   private long bigScore;
   private final transient long accountId;
+  private final static int version = 1;
   private List<String> collectedWeapons = new LinkedList<>();
   
-  public Player(long accountId, String name, long topScore, List<String> collectedWeapons) {
+  public Player(long accountId, String name, int topScore, List<String> collectedWeapons) {
     this.accountId = accountId;
     this.name = name;
-    this.bigScore = topScore;
+    this.topScore = topScore;
     this.collectedWeapons = collectedWeapons;
   }
   
@@ -27,7 +28,7 @@ class Player implements Serializable {
     return "Player{" +
              "id=" + accountId +
              ", name='" + name + '\'' +
-             ", bigScore=" + bigScore +
+             ", topScore=" + topScore +
              ", collectedWeapons=" + collectedWeapons +
              '}';
   }
@@ -35,8 +36,23 @@ class Player implements Serializable {
   @Serial
   @SuppressWarnings("unchecked")
   private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
-    stream.defaultReadObject();
-    bigScore = (bigScore == 0) ? 1_000_000_000L : bigScore;
+//    stream.defaultReadObject();
+//    bigScore = (bigScore == 0) ? 1_000_000_000L : bigScore;
+    
+    var serializedVer = stream.readInt();
+    collectedWeapons = (List<String>) stream.readObject();
+    name = stream.readUTF();;
+    topScore = stream.readInt();
+  }
+  
+  @Serial
+  private void writeObject(ObjectOutputStream stream) throws IOException {
+    
+    System.out.println("--> Customized Writing");
+    stream.writeInt(version);
+    stream.writeObject(collectedWeapons);
+    stream.writeUTF(name);
+    stream.writeInt(topScore);
   }
 }
 
@@ -53,7 +69,7 @@ public class Main {
     System.out.println("Before write: " + tim);
     
     Path timPath = Path.of("playerTim.dat");
-//    writeObject(timPath, tim);
+    writeObject(timPath, tim);
     Player reconstitutedTim = readObject(timPath);
     System.out.println("After read: " + reconstitutedTim);
     
