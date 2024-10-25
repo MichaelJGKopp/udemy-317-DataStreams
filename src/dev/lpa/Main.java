@@ -1,6 +1,7 @@
 package dev.lpa;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class Main {
@@ -9,6 +10,7 @@ public class Main {
     
     Path dataFile = Path.of("data.dat");
     writeData(dataFile);
+    readData(dataFile);
   }
   
   private static void writeData(Path dataFile) {
@@ -54,6 +56,22 @@ public class Main {
       dataStream.writeUTF(myString);
       System.out.println("writeUTF writes " + (dataStream.size() - position));
       position = dataStream.size();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+  
+  private static void readData(Path dataFile) {
+    
+    try (DataInputStream dataStream = new DataInputStream(
+      Files.newInputStream(dataFile))) {  // special NIO2 Input Stream
+      System.out.println("myInt = " + dataStream.readInt());
+      System.out.println("myLong = " + dataStream.readLong());
+      System.out.println("myBoolean = " + dataStream.readBoolean());
+      System.out.println("myChar = " + dataStream.readChar());
+      System.out.println("myFloat = " + dataStream.readFloat());
+      System.out.println("myDouble = " + dataStream.readDouble());
+      System.out.println("myString = " + dataStream.readUTF());
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
