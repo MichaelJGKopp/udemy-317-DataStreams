@@ -8,13 +8,16 @@ import java.util.List;
 import java.util.StringJoiner;
 
 class Player implements Serializable {
+  
+  private final static long serialVersionUID = 1L;
   private String name;
   private int topScore;
+  private long bigScore;
   private List<String> collectedWeapons = new ArrayList<>();
   
-  public Player(String name, int topScore, List<String> collectedWeapons) {
+  public Player(String name, long topScore, List<String> collectedWeapons) {
     this.name = name;
-    this.topScore = topScore;
+    this.bigScore = topScore;
     this.collectedWeapons = collectedWeapons;
   }
   
@@ -22,7 +25,7 @@ class Player implements Serializable {
   public String toString() {
     return new StringJoiner(", ", Player.class.getSimpleName() + "[", "]")
              .add("name='" + name + "'")
-             .add("topScore=" + topScore)
+             .add("bigScore=" + bigScore)
              .add("collectedWeapons=" + collectedWeapons)
              .toString();
   }
