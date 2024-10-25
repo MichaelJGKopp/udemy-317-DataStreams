@@ -5,7 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.StringJoiner;
 
 class Player implements Serializable {
   
@@ -13,9 +12,11 @@ class Player implements Serializable {
   private String name;
   private int topScore;
   private long bigScore;
+  private final transient long accountId;
   private List<String> collectedWeapons = new LinkedList<>();
   
-  public Player(String name, long topScore, List<String> collectedWeapons) {
+  public Player(long accountId, String name, long topScore, List<String> collectedWeapons) {
+    this.accountId = accountId;
     this.name = name;
     this.bigScore = topScore;
     this.collectedWeapons = collectedWeapons;
@@ -23,11 +24,18 @@ class Player implements Serializable {
   
   @Override
   public String toString() {
-    return new StringJoiner(", ", Player.class.getSimpleName() + "[", "]")
-             .add("name='" + name + "'")
-             .add("bigScore=" + bigScore)
-             .add("collectedWeapons=" + collectedWeapons)
-             .toString();
+    return "Player{" +
+             "id=" + accountId +
+             ", name='" + name + '\'' +
+             ", bigScore=" + bigScore +
+             ", collectedWeapons=" + collectedWeapons +
+             '}';
+  }
+  
+  @Serial
+  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+    stream.defaultReadObject();
+    bigScore = (bigScore == 0) ? 1_000_000_000L : bigScore;
   }
 }
 
@@ -39,7 +47,7 @@ public class Main {
     writeData(dataFile);
     readData(dataFile);
     
-    Player tim = new Player("Tim", 100_000_010,
+    Player tim = new Player(555, "Tim", 100_000_010,
       List.of("knife", "machete", "pistol"));
     System.out.println("Before write: " + tim);
     
@@ -47,6 +55,14 @@ public class Main {
 //    writeObject(timPath, tim);
     Player reconstitutedTim = readObject(timPath);
     System.out.println("After read: " + reconstitutedTim);
+    
+    Player joe = new Player(556, "Joe", 75,
+      List.of("crossbow", "rifle", "pistol"));
+    Path joeFile = Path.of("joe.dat");
+    writeObject(joeFile, joe);
+    Player reconstitutedJoe = readObject(joeFile);
+    System.out.println(joe);
+    System.out.println(reconstitutedJoe); // deserialized object
   }
   
   private static void writeData(Path dataFile) {
