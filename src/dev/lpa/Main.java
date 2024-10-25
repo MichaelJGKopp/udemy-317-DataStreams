@@ -33,6 +33,7 @@ class Player implements Serializable {
   }
   
   @Serial
+  @SuppressWarnings("unchecked")
   private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     bigScore = (bigScore == 0) ? 1_000_000_000L : bigScore;
