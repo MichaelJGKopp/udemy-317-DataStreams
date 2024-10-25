@@ -10,10 +10,10 @@ class Player implements Serializable {
   
   private final static long serialVersionUID = -2839624977577268456L;
   private String name;
-  private transient int topScore;
+  private long topScore;
   private long bigScore;
   private final transient long accountId;
-  private final static int version = 1;
+  private final static int version = 2;
   private List<String> collectedWeapons = new LinkedList<>();
   
   public Player(long accountId, String name, int topScore, List<String> collectedWeapons) {
@@ -52,7 +52,7 @@ class Player implements Serializable {
     stream.writeInt(version);
     stream.writeObject(collectedWeapons);
     stream.writeUTF(name);
-    stream.writeInt(topScore);
+    stream.writeLong(topScore);
   }
 }
 
@@ -69,7 +69,7 @@ public class Main {
     System.out.println("Before write: " + tim);
     
     Path timPath = Path.of("playerTim.dat");
-    writeObject(timPath, tim);
+//    writeObject(timPath, tim);
     Player reconstitutedTim = readObject(timPath);
     System.out.println("After read: " + reconstitutedTim);
     
