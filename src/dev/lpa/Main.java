@@ -3,6 +3,30 @@ package dev.lpa;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringJoiner;
+
+class Player implements Serializable {
+  private String name;
+  private int topScore;
+  private List<String> collectedWeapons = new ArrayList<>();
+  
+  public Player(String name, int topScore, List<String> collectedWeapons) {
+    this.name = name;
+    this.topScore = topScore;
+    this.collectedWeapons = collectedWeapons;
+  }
+  
+  @Override
+  public String toString() {
+    return new StringJoiner(", ", Player.class.getSimpleName() + "[", "]")
+             .add("name='" + name + "'")
+             .add("topScore=" + topScore)
+             .add("collectedWeapons=" + collectedWeapons)
+             .toString();
+  }
+}
 
 public class Main {
   
@@ -11,6 +35,9 @@ public class Main {
     Path dataFile = Path.of("data.dat");
     writeData(dataFile);
     readData(dataFile);
+    
+    Player tim = new Player("Tim", 100_000_010,
+      List.of("knife", "machete", "pistol"));
   }
   
   private static void writeData(Path dataFile) {
