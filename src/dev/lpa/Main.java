@@ -38,6 +38,12 @@ public class Main {
     
     Player tim = new Player("Tim", 100_000_010,
       List.of("knife", "machete", "pistol"));
+    System.out.println("Before write: " + tim);
+    
+    Path timPath = Path.of("playerTim.dat");
+    writeObject(timPath, tim);
+    Player reconstitutedTim = readObject(timPath);
+    System.out.println("After read: " + reconstitutedTim);
   }
   
   private static void writeData(Path dataFile) {
@@ -105,10 +111,18 @@ public class Main {
   }
   
   private static void writeObject(Path dataFile, Player player) {
-    try (ObjectOutputStream objStream =
-           new ObjectOutputStream(Files.newOutputStream(dataFile))) {
+    try (ObjectOutputStream objStream = new ObjectOutputStream(Files.newOutputStream(dataFile))) {
       objStream.writeObject(player);
     } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+  
+  private static Player readObject(Path dataFile) {
+    try (ObjectInputStream objStream = new ObjectInputStream(Files.newInputStream(dataFile))) {
+      Object playerObj = objStream.readObject();
+      return (playerObj instanceof Player player) ? player : null;
+    } catch (IOException | ClassNotFoundException e) {
       throw new RuntimeException(e);
     }
   }
