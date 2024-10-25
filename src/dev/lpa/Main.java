@@ -3,17 +3,17 @@ package dev.lpa;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.StringJoiner;
 
 class Player implements Serializable {
   
-  private final static long serialVersionUID = 1L;
+  private final static long serialVersionUID = -2839624977577268456L;
   private String name;
   private int topScore;
   private long bigScore;
-  private List<String> collectedWeapons = new ArrayList<>();
+  private List<String> collectedWeapons = new LinkedList<>();
   
   public Player(String name, long topScore, List<String> collectedWeapons) {
     this.name = name;
@@ -44,7 +44,7 @@ public class Main {
     System.out.println("Before write: " + tim);
     
     Path timPath = Path.of("playerTim.dat");
-    writeObject(timPath, tim);
+//    writeObject(timPath, tim);
     Player reconstitutedTim = readObject(timPath);
     System.out.println("After read: " + reconstitutedTim);
   }
